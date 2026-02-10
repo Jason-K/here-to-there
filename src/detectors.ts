@@ -93,10 +93,7 @@ function normalizeFileManagerResult(result: string) {
 function isProbablyUrlPath(value: string) {
   const lower = value.toLowerCase();
   return (
-    lower.startsWith("http://") ||
-    lower.startsWith("https://") ||
-    lower.includes("http:") ||
-    lower.includes("https:")
+    lower.startsWith("http://") || lower.startsWith("https://") || lower.includes("http:") || lower.includes("https:")
   );
 }
 

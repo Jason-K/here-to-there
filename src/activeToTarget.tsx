@@ -252,10 +252,7 @@ function TargetList({ source, onChangeSource }: { source: Source; onChangeSource
         />
       ) : null}
       {targets.length === 0 ? (
-        <List.EmptyView
-          title="No destinations enabled"
-          description="Enable targets in the command preferences."
-        />
+        <List.EmptyView title="No destinations enabled" description="Enable targets in the command preferences." />
       ) : null}
       {targets.map((target) => (
         <List.Item

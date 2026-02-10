@@ -1,6 +1,14 @@
 import { Clipboard, getApplications, open, showToast, Toast } from "@raycast/api";
 import { showFailureToast } from "@raycast/utils";
-import { AppTarget, DocumentApp, FileManager, getFileManagerPath, resolveDocumentAppPathForOpen, resolveOpenPath, Terminal } from "./detectors";
+import {
+  AppTarget,
+  DocumentApp,
+  FileManager,
+  getFileManagerPath,
+  resolveDocumentAppPathForOpen,
+  resolveOpenPath,
+  Terminal,
+} from "./detectors";
 import { runAppleScript } from "./utils";
 
 function resolveApplicationName(applications: { name: string }[], name: AppTarget) {
