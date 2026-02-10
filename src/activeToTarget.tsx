@@ -114,7 +114,7 @@ function isTargetEnabled(target: AppTarget, preferences: Preferences) {
 }
 
 function TargetList({ source, onChangeSource }: { source: Source; onChangeSource: () => void }) {
-  const preferences = getPreferenceValues<Preferences>();
+  const preferences = useMemo(() => getPreferenceValues<Preferences>(), []);
   const [debugPath, setDebugPath] = useState<string | null>(null);
   const [debugResolvedPath, setDebugResolvedPath] = useState<string | null>(null);
   const [enabledTargets, setEnabledTargets] = useState<Set<AppTarget> | null>(null);
