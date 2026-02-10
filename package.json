@@ -1,0 +1,130 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "here-to-there",
+  "title": "Here to There",
+  "description": "Open the active app path in a chosen target",
+  "icon": "here-there.png",
+  "author": "Jason",
+  "contributors": [
+    "Ianvs",
+    "anirudh_gupta",
+    "xmok",
+    "yedongze"
+  ],
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "activeToTarget",
+      "title": "Here → There",
+      "subtitle": "Take what's open 'here' and open it 'there'",
+      "description": "Choose a source and open it in a target",
+      "mode": "view",
+      "preferences": [
+        {
+          "name": "showFinder",
+          "title": "Show Finder",
+          "type": "checkbox",
+          "label": "Finder",
+          "description": "Show Finder as a destination target",
+          "required": false,
+          "default": true
+        },
+        {
+          "name": "showQSpacePro",
+          "title": "Show QSpace Pro",
+          "type": "checkbox",
+          "label": "QSpace Pro",
+          "description": "Show QSpace Pro as a destination target",
+          "required": false,
+          "default": true
+        },
+        {
+          "name": "showBloom",
+          "title": "Show Bloom",
+          "type": "checkbox",
+          "label": "Bloom",
+          "description": "Show Bloom as a destination target",
+          "required": false,
+          "default": true
+        },
+        {
+          "name": "showTerminal",
+          "title": "Show Terminal",
+          "type": "checkbox",
+          "label": "Terminal",
+          "description": "Show Terminal as a destination target",
+          "required": false,
+          "default": true
+        },
+        {
+          "name": "showITerm",
+          "title": "Show iTerm2",
+          "type": "checkbox",
+          "label": "iTerm2",
+          "description": "Show iTerm2 as a destination target",
+          "required": false,
+          "default": true
+        },
+        {
+          "name": "showKitty",
+          "title": "Show kitty",
+          "type": "checkbox",
+          "label": "kitty",
+          "description": "Show kitty as a destination target",
+          "required": false,
+          "default": true
+        },
+        {
+          "name": "showWarp",
+          "title": "Show Warp",
+          "type": "checkbox",
+          "label": "Warp",
+          "description": "Show Warp as a destination target",
+          "required": false,
+          "default": true
+        },
+        {
+          "name": "showWezTerm",
+          "title": "Show WezTerm",
+          "type": "checkbox",
+          "label": "WezTerm",
+          "description": "Show WezTerm as a destination target",
+          "required": false,
+          "default": true
+        },
+        {
+          "name": "showGhostty",
+          "title": "Show Ghostty",
+          "type": "checkbox",
+          "label": "Ghostty",
+          "description": "Show Ghostty as a destination target",
+          "required": false,
+          "default": true
+        }
+      ]
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.104.1",
+    "@raycast/utils": "^2.2.2"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "^2.0.4",
+    "@types/node": "22.13.10",
+    "@types/react": "19.0.10",
+    "eslint": "^9.22.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2"
+  },
+  "scripts": {
+    "build": "ray build -e dist",
+    "dev": "ray develop",
+    "fix-lint": "ray lint --fix",
+    "lint": "ray lint",
+    "prepublishOnly": "echo \"\\n\\nIt seems like you are trying to publish the Raycast extension to npm.\\n\\nIf you did intend to publish it to npm, remove the \\`prepublishOnly\\` script and rerun \\`npm publish\\` again.\\nIf you wanted to publish it to the Raycast Store instead, use \\`npm run publish\\` instead.\\n\\n\" && exit 1",
+    "publish": "npx @raycast/api@latest publish"
+  },
+  "platforms": [
+    "macOS"
+  ]
+}
