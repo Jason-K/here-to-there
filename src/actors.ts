@@ -1,19 +1,37 @@
 import { Clipboard, getApplications, open, showToast, Toast } from "@raycast/api";
 import { showFailureToast } from "@raycast/utils";
 import {
-  AppTarget,
-  DocumentApp,
-  FileManager,
-  getFileManagerPath,
-  resolveDocumentAppPathForOpen,
-  resolveOpenPath,
-  Terminal,
+    AppTarget,
+    DocumentApp,
+    DocumentTarget,
+    FileManager,
+    getFileManagerPath,
+    resolveDocumentAppPathForOpen,
+    resolveOpenPath,
+    Terminal,
 } from "./detectors";
 import { runAppleScript } from "./utils";
 
 function resolveApplicationName(applications: { name: string }[], name: AppTarget) {
   if (name === "iTerm") {
     return applications.find((app) => app.name === "iTerm2" || app.name === "iTerm")?.name ?? null;
+  }
+
+  if (name === "Adobe Acrobat") {
+    return (
+      applications.find((app) => app.name === "Adobe Acrobat" || app.name === "Adobe Acrobat DC")?.name ??
+      applications.find((app) => app.name === "Adobe Acrobat Pro" || app.name === "Adobe Acrobat Pro DC")?.name ??
+      applications.find((app) => app.name === "Acrobat")?.name ??
+      null
+    );
+  }
+
+  if (name === "Adobe Acrobat Reader DC") {
+    return (
+      applications.find(
+        (app) => app.name === "Adobe Acrobat Reader" || app.name === "Adobe Acrobat Reader DC",
+      )?.name ?? null
+    );
   }
 
   return applications.find((app) => app.name === name)?.name ?? null;
@@ -75,13 +93,31 @@ export async function documentAppToApplication(app: DocumentApp, name: AppTarget
 
     if (!resolvedPath) {
       throw new Error(
-        "Document is cloud-only or cannot be mapped. Save locally or sync in OneDrive to open in Finder or a terminal.",
+        "Document is cloud-only or cannot be mapped. Save locally or sync in OneDrive to open in another app.",
       );
     }
 
     const directory = await resolveOpenPath(resolvedPath);
     const appName = await checkApplication(name);
     await open(directory.trim(), appName);
+    await showToast(Toast.Style.Success, "Done");
+  } catch (err) {
+    await showFailureToast(err);
+  }
+}
+
+export async function documentAppToDocumentApp(app: DocumentApp, name: DocumentTarget) {
+  try {
+    const { resolvedPath } = await resolveDocumentAppPathForOpen(app);
+
+    if (!resolvedPath) {
+      throw new Error(
+        "Document is cloud-only or cannot be mapped. Save locally or sync in OneDrive to open in Finder or a terminal.",
+      );
+    }
+
+    const appName = await checkApplication(name);
+    await open(resolvedPath.trim(), appName);
     await showToast(Toast.Style.Success, "Done");
   } catch (err) {
     await showFailureToast(err);

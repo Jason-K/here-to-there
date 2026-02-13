@@ -15,15 +15,19 @@ import {
   applicationToFileManager,
   clipboardToApplication,
   documentAppToApplication,
+  documentAppToDocumentApp,
   fileManagerToApplication,
 } from "./actors";
 import {
   AppTarget,
+  DOCUMENT_TARGETS,
+  DocumentTarget,
   DOCUMENT_APPS,
   DocumentApp,
   FileManager,
   FILE_MANAGERS,
   isDocumentApp,
+  isDocumentTarget,
   isFileManager,
   resolveDocumentAppPathForOpen,
   resolveOpenPath,
@@ -44,6 +48,11 @@ type Preferences = {
   showWarp: boolean;
   showWezTerm: boolean;
   showGhostty: boolean;
+  showPreview: boolean;
+  showSkim: boolean;
+  showPDFExpert: boolean;
+  showAcrobat: boolean;
+  showAcrobatReader: boolean;
 };
 
 const DESTINATION_STORAGE_KEY = "enabledTargets";
@@ -51,6 +60,7 @@ const SOURCE_STORAGE_KEY = "hiddenSources";
 
 const fileManagers: FileManager[] = FILE_MANAGERS;
 const terminals: Terminal[] = TERMINALS;
+const documentTargets: DocumentTarget[] = DOCUMENT_TARGETS;
 const sources: Source[] = ["Clipboard", ...fileManagers, ...terminals, ...DOCUMENT_APPS];
 
 function normalizeFrontmostName(name: string, bundleId?: string): Source | null {
@@ -85,6 +95,12 @@ function buildDefaultEnabledTargets(preferences: Preferences) {
   if (preferences.showWezTerm) enabled.push("WezTerm");
   if (preferences.showGhostty) enabled.push("Ghostty");
 
+  if (preferences.showPreview) enabled.push("Preview");
+  if (preferences.showSkim) enabled.push("Skim");
+  if (preferences.showPDFExpert) enabled.push("PDF Expert");
+  if (preferences.showAcrobat) enabled.push("Adobe Acrobat");
+  if (preferences.showAcrobatReader) enabled.push("Adobe Acrobat Reader DC");
+
   return new Set(enabled);
 }
 
@@ -108,6 +124,16 @@ function isTargetEnabled(target: AppTarget, preferences: Preferences) {
       return preferences.showWezTerm;
     case "Ghostty":
       return preferences.showGhostty;
+    case "Preview":
+      return preferences.showPreview;
+    case "Skim":
+      return preferences.showSkim;
+    case "PDF Expert":
+      return preferences.showPDFExpert;
+    case "Adobe Acrobat":
+      return preferences.showAcrobat;
+    case "Adobe Acrobat Reader DC":
+      return preferences.showAcrobatReader;
     default:
       return true;
   }
@@ -171,7 +197,15 @@ function TargetList({ source, onChangeSource }: { source: Source; onChangeSource
       if (stored) {
         try {
           const parsed = JSON.parse(stored) as AppTarget[];
-          setEnabledTargets(new Set(parsed));
+          const next = new Set(parsed);
+          const hasDocumentTargets = documentTargets.some((target) => next.has(target));
+          if (!hasDocumentTargets) {
+            const defaults = buildDefaultEnabledTargets(preferences);
+            documentTargets.forEach((target) => {
+              if (defaults.has(target)) next.add(target);
+            });
+          }
+          setEnabledTargets(next);
           return;
         } catch {
           // Fall through to defaults.
@@ -201,11 +235,15 @@ function TargetList({ source, onChangeSource }: { source: Source; onChangeSource
     let targetList: AppTarget[] = [];
 
     if (source === "Clipboard" || isDocumentApp(source)) {
-      targetList = [...fileManagers, ...terminals] as AppTarget[];
+      targetList = [...fileManagers, ...terminals, ...documentTargets] as AppTarget[];
     } else if (isFileManager(source)) {
       targetList = [...fileManagers.filter((manager) => manager !== source), ...terminals] as AppTarget[];
     } else {
       targetList = fileManagers as AppTarget[];
+    }
+
+    if (isDocumentApp(source)) {
+      targetList = targetList.filter((target) => target !== source);
     }
 
     const allowed = targetList.filter((target) => isTargetEnabled(target, preferences));
@@ -225,7 +263,7 @@ function TargetList({ source, onChangeSource }: { source: Source; onChangeSource
               <Action
                 title="Enable All Destinations"
                 onAction={async () => {
-                  const allTargets = new Set<AppTarget>([...fileManagers, ...terminals]);
+                  const allTargets = new Set<AppTarget>([...fileManagers, ...terminals, ...documentTargets]);
                   await updateEnabledTargets(allTargets);
                 }}
               />
@@ -271,6 +309,11 @@ function TargetList({ source, onChangeSource }: { source: Source; onChangeSource
                     }
 
                     if (isDocumentApp(source)) {
+                      if (isDocumentTarget(target)) {
+                        await documentAppToDocumentApp(source, target as DocumentTarget);
+                        return;
+                      }
+
                       await documentAppToApplication(source, target as AppTarget);
                       return;
                     }
@@ -294,7 +337,7 @@ function TargetList({ source, onChangeSource }: { source: Source; onChangeSource
               <Action
                 title="Enable All Destinations"
                 onAction={async () => {
-                  const allTargets = new Set<AppTarget>([...fileManagers, ...terminals]);
+                  const allTargets = new Set<AppTarget>([...fileManagers, ...terminals, ...documentTargets]);
                   await updateEnabledTargets(allTargets);
                 }}
               />

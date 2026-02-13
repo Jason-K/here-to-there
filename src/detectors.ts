@@ -71,11 +71,21 @@ export const DOCUMENT_APPS: DocumentApp[] = [
   "Adobe Acrobat Reader DC",
 ];
 
-export type AppTarget = Terminal | FileManager;
+export type DocumentTarget = "Preview" | "Skim" | "PDF Expert" | "Adobe Acrobat" | "Adobe Acrobat Reader DC";
+export const DOCUMENT_TARGETS: DocumentTarget[] = [
+  "Preview",
+  "Skim",
+  "PDF Expert",
+  "Adobe Acrobat",
+  "Adobe Acrobat Reader DC",
+];
+
+export type AppTarget = Terminal | FileManager | DocumentTarget;
 
 export const isFileManager = (val: string): val is FileManager => FILE_MANAGERS.includes(val as FileManager);
 export const isTerminal = (val: string): val is Terminal => TERMINALS.includes(val as Terminal);
 export const isDocumentApp = (val: string): val is DocumentApp => DOCUMENT_APPS.includes(val as DocumentApp);
+export const isDocumentTarget = (val: string): val is DocumentTarget => DOCUMENT_TARGETS.includes(val as DocumentTarget);
 
 function normalizeFileManagerResult(result: string) {
   const trimmed = result.trim();

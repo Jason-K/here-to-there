@@ -100,6 +100,51 @@
           "description": "Show Ghostty as a destination target",
           "required": false,
           "default": true
+        },
+        {
+          "name": "showPreview",
+          "title": "Show Preview",
+          "type": "checkbox",
+          "label": "Preview",
+          "description": "Show Preview as a destination target",
+          "required": false,
+          "default": false
+        },
+        {
+          "name": "showSkim",
+          "title": "Show Skim",
+          "type": "checkbox",
+          "label": "Skim",
+          "description": "Show Skim as a destination target",
+          "required": false,
+          "default": true
+        },
+        {
+          "name": "showPDFExpert",
+          "title": "Show PDF Expert",
+          "type": "checkbox",
+          "label": "PDF Expert",
+          "description": "Show PDF Expert as a destination target",
+          "required": false,
+          "default": false
+        },
+        {
+          "name": "showAcrobat",
+          "title": "Show Adobe Acrobat",
+          "type": "checkbox",
+          "label": "Adobe Acrobat",
+          "description": "Show Adobe Acrobat as a destination target",
+          "required": false,
+          "default": true
+        },
+        {
+          "name": "showAcrobatReader",
+          "title": "Show Adobe Acrobat Reader",
+          "type": "checkbox",
+          "label": "Adobe Acrobat Reader",
+          "description": "Show Adobe Acrobat Reader as a destination target",
+          "required": false,
+          "default": false
         }
       ]
     }
@@ -117,7 +162,7 @@
     "typescript": "^5.8.2"
   },
   "scripts": {
-    "build": "ray build -e dist",
+    "build": "ray build -e dist && hs -c \"hs.reload()\" ",
     "dev": "ray develop",
     "fix-lint": "ray lint --fix",
     "lint": "ray lint",
